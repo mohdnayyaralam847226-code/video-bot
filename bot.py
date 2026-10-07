@@ -13,8 +13,8 @@ DATA_FILE = "user_progress.json"
 # 🍿 यहाँ अपने वीडियो की टेलीग्राम File IDs भरें (लाइन से कोमा लगाकर)
 # मैंने आपकी पहली आईडी यहाँ डाल दी है, आगे और आईडी इसी तरह नीचे बढ़ाते जाएं
 VIDEO_LIST = [
-    "BAACAgUAAxkBAAIso2rF4O_GbchSmAEu7LoU9sWDzzsjAAI-IgAC9rAxVoHtNyZxETtzPQQ",
-    # "यहाँ_दूसरे_वीडियो_की_File_ID_डालें",
+    "BAACAgUAAxkBAAIsn2rF4LLaWmTab4RXHhIWXzwW3ENVAAI9IgAC9rAxVnzvm4SMLjj3PQQ",
+     "BAACAgUAAxkBAAIsr2rF6-fP1WACynRWTfAWG0EZcGZMAALcIwACWoAxVviToRD_1ef_PQQ",
     # "यहाँ_तीसरे_वीडियो_की_File_ID_डालें"
 ]
 

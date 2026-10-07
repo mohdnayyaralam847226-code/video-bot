@@ -49,7 +49,7 @@ def send_next_video(message):
         bot.send_video(
             message.chat.id, 
             next_video, 
-            caption=f"वीडियो नंबर {current_index + 1} 🍿\n\nअगला वीडियो देखने के लिए दोबारा /start भेजें!",
+            caption=f"वीडियो नंबर {current_index + 1} 🍿\n\n🫤beta agla video dekhne ke le💨 /start भेजें!",
             has_spoiler=True
         )
         # यूजर का नंबर 1 आगे बढ़ाएं ताकि अगली बार अगला वीडियो जाए

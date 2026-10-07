@@ -4,18 +4,16 @@ import telebot
 from flask import Flask
 from threading import Thread
 
-# Render की सेटिंग्स (Environment Variables) से टोकन अपने आप लोड हो जाएगा
+# Load token from Render settings
 BOT_TOKEN = os.environ.get("BOT_TOKEN") 
 bot = telebot.TeleBot(BOT_TOKEN)
 
 DATA_FILE = "user_progress.json"
 
-# 🍿 यहाँ आपके वीडियो की टेलीग्राम File IDs की लिस्ट है
-# जब भी आपको नया वीडियो जोड़ना हो, नीचे कोमा (,) लगाकर नई ID डालते जाएं
+# Add your Telegram File IDs here
 VIDEO_LIST = [
-    "BAACAgUAAxkBAAIso2rF4O_GbchSmAEu7LoU9sWDzzsjAAI-IgAC9rAxVoHtNyZxETtzPQQ", # पहला वीडियो (जो आपने भेजा)
-    # "यहाँ_दूसरे_वीडियो_की_File_ID_डालें",
-    # "यहाँ_तीसरे_वीडियो_की_File_ID_डालें"
+    "BAACAgUAAxkBAAIso2rF4O_GbchSmAEu7LoU9sWDzzsjAAI-IgAC9rAxVoHtNyZxETtzPQQ",
+    # Add more file IDs here separated by comma
 ]
 
 def load_progress():
@@ -29,21 +27,19 @@ def save_progress(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=4)
 
-# जब कोई भी यूजर बॉट में /start भेजेगा
+# Handle /start command
 @bot.message_handler(commands=['start'])
 def send_next_video(message):
     user_id = str(message.from_user.id)
     progress = load_progress()
     
-    # पता करें कि यूजर अभी किस नंबर के वीडियो पर है
     current_index = progress.get(user_id, 0)
     
-    # अगर यूजर ने आपकी लिस्ट के सारे वीडियो देख लिए हैं
+    # If all videos are watched
     if current_index >= len(VIDEO_LIST):
         bot.reply_to(message, "🎉 आपने हमारे सारे वीडियो देख लिए हैं! धन्यवाद।")
         return
         
-    # अगला वीडियो भेजें
     next_video = VIDEO_LIST[current_index]
     try:
         bot.send_video(
@@ -51,18 +47,17 @@ def send_next_video(message):
             next_video, 
             caption=f"वीडियो नंबर {current_index + 1} 🍿\n\nअगला वीडियो देखने के लिए दोबारा /start भेजें!"
         )
-        # यूजर का प्रोग्रेस 1 नंबर आगे बढ़ाएं ताकि अगली बार अगला वीडियो जाए
         progress[user_id] = current_index + 1
         save_progress(progress)
     except Exception as e:
         bot.reply_to(message, "❌ वीडियो भेजने में समस्या आई। कृपया अपनी File ID चेक करें।")
 
-# --- Render को 24 घंटे ऑनलाइन रखने के लिए वेब सर्वर ---
+# Flask Server for Render 24/7 Keep-Alive
 app = Flask('')
 
 @app.route('/')
 def home():
-    return "बॉट सफलतापूर्ण 24 घंटे लाइव है!"
+    return "Bot is 24/7 Alive!"
 
 def run():
     port = int(os.environ.get("PORT", 10000))
@@ -73,7 +68,12 @@ def keep_alive():
     t.start()
 
 if __name__ == "__main__":
-    keep_alive() # वेब सर्वर शुरू करें
-    print("बॉट सफलतापूर्ण चालू हो गया है...")
+    keep_alive()
+    
+    # FIX: यह लाइन पुराने सभी Webhook कनेक्शन को डिलीट कर देगी ताकि एरर खत्म हो जाए
+    print("Deleting old webhook...")
+    bot.remove_webhook()
+    
+    print("Bot started successfully...")
     bot.infinity_polling()
     
